@@ -8,9 +8,9 @@ contract LiquidityPool{
     // 5% transaction fee
     uint256 private constant TRANSACTION_FEE = 5;
     address public AdamTokenAddress;
-    uint256 public LPETHAmount;
-    uint256 public LPAdamTokenAmount;
-    uint256 private immutable productFormulaConstant;
+    uint256 private LPETHAmount;
+    uint256 private LPAdamTokenAmount;
+    uint256 private constantProduct;
 
     address private immutable deployer;
 
@@ -34,8 +34,47 @@ contract LiquidityPool{
         require(AdamToken.transferFrom(sender, address(this), amount));
 
         // update the mapping to the address that is providing the $ADAM token
+        LPADAMBalance[sender] = amount;
+        // update the variable storing the amount of ADAM token in the liquidity pool
+        LPAdamTokenAmount += amount;
+        calculateConstantProduct();
     }
 
+    function calculateConstantProduct() private{
+        constantProduct = LPAdamTokenAmount * LPETHAmount;
+    }
+
+    function swapETH() public payable{
+        // send the provider the required $ADAM token for the ETH they are sending, calculate this value using the constant product formula
+    }
+
+    function swapAdamToken(address sender, uint256 amount) public payable{
+        IERC20 AdamToken = IERC20(AdamTokenAddress);
+        require(AdamToken.transferFrom(sender, address(this), amount));
+
+        LPADAMBalance[sender] -= amount;
+
+        // send the liquidity provider the required ETH, calculate this value using the constant product formula
+        // send the transaction fees to the required current liquidity 
+    }
+
+    function removeLiquidity(address sender, uint256 ETHAmount, uint256 AdamTokenAmount) public payable{
+        // send the sender the required - if that is all the liquidity that they provide remove all there funds and reflect this in the mapping
+        // remember to distribute the transactions to the liquidity providers correctly
+    }
+
+    function getConstantProduct() public view returns(uint256){
+        return constantProduct;
+    }
+
+    function getAdamPrice() public view returns(uint256){
+        // get the price of $ADAM token in terms of ETH (use wei or gwei to avoid decimals)
+    }
+
+    function getETHPrice() public view returns(uint256){
+        // get the price of ETH in terms of $ADAM token
+        return (LPAdamTokenAmount / LPETHAmount);
+    }
     function getLPETHAmount() public view returns(uint256){
         return LPETHAmount;
     }
