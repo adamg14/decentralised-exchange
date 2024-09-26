@@ -44,7 +44,7 @@ contract LiquidityPool{
         constantProduct = LPAdamTokenAmount * LPETHAmount;
     }
 
-    function swapETH() public payable{
+    function swapETH(address) public payable{
         // send the provider the required $ADAM token for the ETH they are sending, calculate this value using the constant product formula
     }
 
